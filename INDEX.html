@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="A.Health">
+<title>Plano Premium 60 Dias — Arianna</title>
+<style>
+  :root {
+    --blue:#D6336C;--blue-dark:#A61E4D;--blue-light:#FFF0F6;
+    --green:#9775FA;--green-dark:#7048E8;--green-light:#F3F0FF;
+    --teal:#E64980;--teal-light:#FFF0F6;
+    --navy:#5F3DC4;--gold:#CC5DE8;--gray:#9D6B9D;
+    --border:#F3D9E8;--red:#D9534F;--bg:#FFF5FA;
+    --teal-dark:var(--blue-dark);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:#1a1a1a;padding-bottom:80px;-webkit-overflow-scrolling:touch;}
+  .app{max-width:720px;margin:0 auto;padding:14px;}
+
+  .header{background:linear-gradient(135deg,#A61E4D 0%,#D6336C 50%,#E64980 100%);color:white;border-radius:16px;padding:0;margin-bottom:14px;overflow:hidden;box-shadow:0 4px 20px rgba(214,51,108,0.25);}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;}
+  .header-logo{display:flex;align-items:center;gap:10px;}
+  .header-logo-text{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+  .header-logo-text .w{color:white;}.header-logo-text .dot{color:#9775FA;}.header-logo-text .health{color:rgba(255,255,255,0.85);font-weight:600;}
+  .header-tagline{font-size:10px;color:rgba(255,255,255,0.7);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px;}
+  .header-strip{height:4px;background:linear-gradient(90deg,#9775FA,#E64980,#D6336C);}
+
+  /* Banner aviso storage */
+  .storage-warning{background:#FEF3C7;border:1px solid #F59E0B;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:11.5px;color:#92400E;display:none;}
+  .storage-warning b{color:#78350F;}
+
+  /* TABS */
+  .tabs-wrap{margin-bottom:14px;}
+  .tabs{display:flex;gap:4px;background:white;border-radius:12px;padding:5px;border:1px solid var(--border);margin-bottom:4px;}
+  .tab{flex:1;text-align:center;padding:8px 3px;border-radius:9px;font-size:11px;font-weight:700;color:var(--gray);cursor:pointer;user-select:none;transition:all .15s;-webkit-user-select:none;}
+  .tab.active{background:var(--blue);color:white;}
+
+  .panel{display:none;}.panel.active{display:block;}
+  .card{background:white;border:1px solid var(--border);border-radius:12px;padding:15px 16px;margin-bottom:12px;}
+
+  .progress-row{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;}
+  .stat-box{flex:1;min-width:70px;background:var(--blue-light);border-radius:10px;padding:10px 6px;text-align:center;}
+  .stat-box .sval{font-size:16px;font-weight:800;color:var(--blue);display:block;}
+  .stat-box .slabel{font-size:8.5px;color:var(--gray);text-transform:uppercase;font-weight:700;letter-spacing:.3px;}
+
+  .day-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .day-nav .day-title{font-size:16px;font-weight:800;color:var(--navy);}
+  .phase-tag{font-size:10px;font-weight:700;background:var(--gold);color:white;padding:3px 9px;border-radius:10px;margin-left:7px;vertical-align:middle;}
+  .nav-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:white;font-size:18px;font-weight:700;color:var(--navy);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .nav-btn:active{transform:scale(.92);background:var(--blue-light);}
+  .nav-btn:disabled{opacity:.3;cursor:default;}
+
+  .day-picker-row{display:flex;gap:4px;overflow-x:auto;padding:4px 0 10px 0;margin-bottom:4px;-webkit-overflow-scrolling:touch;}
+  .day-pill{flex-shrink:0;width:36px;height:36px;border-radius:7px;border:1px solid var(--border);background:white;font-size:11px;font-weight:700;color:var(--gray);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .day-pill.done{background:var(--blue-light);color:var(--blue);border-color:var(--blue);}
+  .day-pill.current{background:var(--blue);color:white;border-color:var(--blue);}
+
+  .check-item{display:flex;align-items:center;gap:11px;padding:13px 4px;border-bottom:1px solid var(--border);cursor:pointer;}
+  .check-item:last-child{border-bottom:none;}
+  .check-box{width:30px;height:30px;border-radius:8px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;color:white;font-weight:800;}
+  .check-box.checked{background:var(--blue);border-color:var(--blue);}
+  .check-label{font-size:14px;font-weight:600;color:var(--navy);flex-grow:1;}
+  .check-sub{font-size:11px;color:var(--gray);margin-top:2px;}
+  .day-complete-banner{background:var(--green-light);border:1px solid var(--green);border-radius:10px;padding:10px 14px;text-align:center;font-size:12px;font-weight:700;color:var(--green-dark);margin-top:11px;}
+
+  .section-title{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--blue);margin-bottom:9px;}
+
+  /* ÁGUA */
+  .water-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
+  .water-total{font-size:21px;font-weight:800;color:var(--teal-dark);}
+  .water-total span{font-size:12px;font-weight:600;color:var(--gray);}
+  .water-bar-bg{height:9px;background:#E2E5EA;border-radius:20px;margin-bottom:12px;overflow:hidden;}
+  .water-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:20px;transition:width .3s;}
+  .water-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+  .water-cup{border-radius:9px;border:2px solid var(--border);background:white;padding:9px 5px 7px 5px;text-align:center;cursor:pointer;min-height:64px;}
+  .water-cup.filled{background:var(--blue-light);border-color:var(--blue);}
+  .cup-icon{font-size:20px;display:block;margin-bottom:2px;}
+  .cup-time{font-size:9.5px;font-weight:700;color:var(--gray);}
+  .cup-ml{font-size:9.5px;font-weight:700;color:var(--teal-dark);margin-top:1px;}
+  .water-cup.filled .cup-time{color:var(--teal-dark);}
+  .water-reset{font-size:12px;color:var(--gray);text-align:right;cursor:pointer;text-decoration:underline;margin-top:7px;padding:8px 0;}
+
+  /* SUPLEMENTOS */
+  .supp-block{margin-bottom:9px;}
+  .supp-time-header{font-size:12.5px;font-weight:800;color:var(--navy);background:var(--blue-light);padding:7px 11px;border-radius:8px;margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+  .supp-item{display:flex;align-items:center;gap:9px;padding:11px 11px;border:1px solid var(--border);border-radius:8px;margin-bottom:4px;cursor:pointer;background:white;min-height:52px;}
+  .supp-item.done{background:var(--blue-light);border-color:var(--blue);}
+  .supp-check{width:26px;height:26px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:white;font-weight:800;}
+  .supp-check.checked{background:var(--blue);border-color:var(--blue);}
+  .supp-name{font-size:13px;font-weight:700;color:var(--navy);}
+  .supp-dose{font-size:11px;color:var(--gray);}
+  .supp-all-done{background:var(--green-light);border:1px solid var(--green);border-radius:8px;padding:7px 11px;text-align:center;font-size:11.5px;font-weight:700;color:var(--green-dark);margin-top:5px;}
+
+  /* MEDIDAS */
+  .week-select{display:flex;gap:5px;overflow-x:auto;margin-bottom:12px;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
+  .week-pill{flex-shrink:0;padding:8px 14px;border-radius:14px;border:1px solid var(--border);background:white;font-size:12px;font-weight:700;color:var(--gray);cursor:pointer;}
+  .week-pill.active{background:var(--blue-dark);color:white;border-color:var(--navy);}
+  .week-pill.filled::after{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);margin-left:4px;vertical-align:middle;}
+
+  .input-row{margin-bottom:10px;}
+  .input-row label{display:block;font-size:11.5px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+  .input-row input{width:100%;padding:12px 11px;border-radius:8px;border:1px solid var(--border);font-size:16px;font-family:inherit;-webkit-appearance:none;appearance:none;}
+  .input-row input:focus{outline:none;border-color:var(--blue);}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:13px 16px;border-radius:9px;border:none;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-bottom:7px;-webkit-appearance:none;}
+  .btn-primary{background:linear-gradient(135deg,var(--blue),var(--teal));color:white;}
+  .btn-primary:active{opacity:.85;}
+  .btn-secondary{background:white;border:1px solid var(--border);color:var(--navy);}
+  .btn-danger{background:#FEF2F2;border:1px solid #FECACA;color:var(--red);}
+
+  .chart-wrap{position:relative;height:200px;margin:8px 0 4px 0;}
+  .toggle-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+  .toggle-btn{flex:1;min-width:60px;padding:8px 4px;text-align:center;border-radius:7px;border:1px solid var(--border);background:white;font-size:11px;font-weight:700;color:var(--gray);cursor:pointer;}
+  .toggle-btn.active{background:var(--blue-light);color:var(--blue);border-color:var(--blue);}
+
+  .export-row{display:flex;gap:8px;}
+  .export-row .btn{margin-bottom:0;}
+  .empty-state{text-align:center;padding:28px 10px;color:var(--gray);font-size:12.5px;}
+
+  /* BIOIMPEDÂNCIA */
+  .bio-group-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:white;background:var(--navy);padding:7px 12px;border-radius:8px;margin:14px 0 8px 0;}
+  .bio-input-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px;}
+  .bio-field{background:var(--bg);border-radius:8px;padding:9px 11px;border:1px solid var(--border);}
+  .bio-field label{display:block;font-size:10px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px;}
+  .bio-field input{width:100%;border:none;background:transparent;font-size:16px;font-weight:700;color:var(--navy);font-family:inherit;outline:none;-webkit-appearance:none;}
+  .bio-field .bio-unit{font-size:10px;color:var(--gray);font-weight:600;}
+
+  .bio-history-item{display:flex;align-items:center;justify-content:space-between;padding:12px 4px;border-bottom:1px solid var(--border);cursor:pointer;}
+  .bio-history-item:last-child{border-bottom:none;}
+  .bio-history-date{font-size:13px;font-weight:700;color:var(--navy);}
+  .bio-history-sub{font-size:11px;color:var(--gray);}
+  .bio-history-peso{font-size:16px;font-weight:800;color:var(--teal-dark);}
+  .bio-history-delta{font-size:11px;font-weight:700;}
+  .bio-history-delta.down{color:var(--green);}
+  .bio-history-delta.up{color:var(--red);}
+
+  .baseline-badge{display:inline-block;font-size:9px;font-weight:800;background:var(--gold);color:white;padding:2px 7px;border-radius:8px;margin-left:6px;vertical-align:middle;}
+
+  /* RELATÓRIO */
+  .report-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px;}
+  .report-table th{background:var(--blue-dark);color:white;padding:8px 10px;text-align:left;font-size:10.5px;}
+  .report-table td{padding:8px 10px;border-bottom:1px solid var(--border);}
+  .report-table tr:nth-child(even) td{background:#FAFBFC;}
+  .delta-good{color:var(--green);font-weight:700;}
+  .delta-bad{color:var(--red);font-weight:700;}
+  .delta-neutral{color:var(--gray);font-weight:700;}
+  .group-sep td{background:var(--teal-light)!important;font-weight:800;font-size:10.5px;color:var(--teal-dark);text-transform:uppercase;letter-spacing:.4px;}
+
+  .save-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:white;padding:10px 20px;border-radius:20px;font-size:12px;font-weight:600;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;}
+  .save-toast.show{opacity:1;}
+  .loading-state{text-align:center;padding:40px 10px;color:var(--gray);font-size:13px;}
+
+  /* iOS safe area */
+  @supports(padding-bottom: env(safe-area-inset-bottom)){
+    body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
+    .save-toast{bottom:calc(24px + env(safe-area-inset-bottom));}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-inner">
+      <div class="header-logo">
+        <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="wGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#D6336C"/>
+              <stop offset="100%" stop-color="#E64980"/>
+            </linearGradient>
+            <linearGradient id="dnaGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#9775FA"/>
+              <stop offset="100%" stop-color="#E64980"/>
+            </linearGradient>
+          </defs>
+          <path d="M4 10 L11 34 L18 18 L23 28 L28 18 L35 34 L42 10" stroke="url(#wGrad)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M19 8 C21 14 17 20 19 26 C21 32 17 38 19 44" stroke="url(#dnaGrad)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.85"/>
+          <path d="M23 8 C21 14 25 20 23 26 C21 32 25 38 23 44" stroke="url(#dnaGrad)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.85"/>
+          <line x1="19.5" y1="13" x2="22.5" y2="13" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+          <line x1="19" y1="19" x2="23" y2="19" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+          <line x1="19.5" y1="25" x2="22.5" y2="25" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+          <line x1="19" y1="31" x2="23" y2="31" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+          <line x1="19.5" y1="37" x2="22.5" y2="37" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+          <circle cx="19" cy="8" r="2" fill="#9775FA"/>
+          <circle cx="23" cy="8" r="2" fill="#E64980"/>
+          <circle cx="19" cy="44" r="2" fill="#9775FA"/>
+          <circle cx="23" cy="44" r="2" fill="#E64980"/>
+        </svg>
+        <div>
+          <div class="header-logo-text"><span class="w">A</span><span class="dot">.</span><span class="health">Health</span></div>
+          <div class="header-tagline">Plano Premium · 60 Dias</div>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:13px;font-weight:800;color:white;">Arianna Cerqueira Hotts</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.7);">35 anos · 1,58m</div>
+      </div>
+    </div>
+    <div class="header-strip"></div>
+  </div>
+
+  <div class="storage-warning" id="storageWarning">
+    <b>⚠️ Atenção:</b> Seu navegador não suporta salvamento local neste modo. Os dados ficam na memória enquanto o app estiver aberto. <b>Para salvar permanentemente, adicione este app à Tela de Início</b> (Safari → compartilhar → "Adicionar à Tela de Início").
+  </div>
+
+  <div class="progress-row" id="progressRow"></div>
+
+  <div class="tabs-wrap">
+    <div class="tabs">
+      <div class="tab active" data-tab="inicio">Início</div>
+      <div class="tab" data-tab="checklist">Checklist</div>
+      <div class="tab" data-tab="agua">Água</div>
+      <div class="tab" data-tab="suplementos">Suplementos</div>
+    </div>
+    <div class="tabs">
+      <div class="tab" data-tab="bio">Bioimpedância</div>
+      <div class="tab" data-tab="grafico">Evolução</div>
+      <div class="tab" data-tab="relatorio">Relatório</div>
+    </div>
+  </div>
+
+  <div id="loadingState" class="loading-state">Carregando seus dados...</div>
+  <div id="mainContent" style="display:none;">
+
+    <!-- INÍCIO -->
+    <div class="panel active" id="panel-inicio">
+      <div class="card" style="background:linear-gradient(135deg,#A61E4D,#D6336C,#E64980);border:none;color:white;padding:0;overflow:hidden;">
+        <div style="padding:20px 20px 16px 20px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+            <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.15);border:3px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:white;flex-shrink:0;">A</div>
+            <div>
+              <div style="font-size:20px;font-weight:800;color:white;">Arianna Cerqueira Hotts</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.75);margin-top:2px;">Paciente · Plano Premium 60 Dias</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="background:rgba(255,255,255,0.12);border-radius:10px;padding:10px 12px;">
+              <div style="font-size:9px;color:rgba(255,255,255,0.65);text-transform:uppercase;font-weight:700;letter-spacing:.5px;">Idade</div>
+              <div style="font-size:18px;font-weight:800;color:white;margin-top:2px;">35 anos</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.12);border-radius:10px;padding:10px 12px;">
+              <div style="font-size:9px;color:rgba(255,255,255,0.65);text-transform:uppercase;font-weight:700;letter-spacing:.5px;">Sexo</div>
+              <div style="font-size:18px;font-weight:800;color:white;margin-top:2px;">Feminino</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.12);border-radius:10px;padding:10px 12px;">
+              <div style="font-size:9px;color:rgba(255,255,255,0.65);text-transform:uppercase;font-weight:700;letter-spacing:.5px;">Altura</div>
+              <div style="font-size:18px;font-weight:800;color:white;margin-top:2px;">1,58 m</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.12);border-radius:10px;padding:10px 12px;">
+              <div style="font-size:9px;color:rgba(255,255,255,0.65);text-transform:uppercase;font-weight:700;letter-spacing:.5px;">Peso inicial</div>
+              <div style="font-size:18px;font-weight:800;color:white;margin-top:2px;">61 kg</div>
+            </div>
+          </div>
+        </div>
+        <div style="height:4px;background:linear-gradient(90deg,#9775FA,#E64980,#D6336C);"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title" style="color:var(--blue);">Peso atual</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="number" step="0.1" id="currentWeightInput" placeholder="Ex: 60.5" inputmode="decimal" style="flex:1;padding:12px 11px;border-radius:8px;border:1px solid var(--border);font-size:16px;font-family:inherit;-webkit-appearance:none;">
+          <span style="font-size:13px;color:var(--gray);font-weight:700;">kg</span>
+        </div>
+        <div id="currentWeightSaved" style="font-size:11px;color:var(--gray);margin-top:6px;"></div>
+      </div>
+
+
+      <div class="card">
+        <div class="section-title" style="color:var(--blue);">Protocolo — Objetivos</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--blue-light);border-radius:8px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--blue);color:white;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+            <span style="font-size:13px;font-weight:600;color:var(--navy);">Dormir até 22h de forma consistente</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--blue-light);border-radius:8px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--blue);color:white;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+            <span style="font-size:13px;font-weight:600;color:var(--navy);">Consumir 3 litros de água diariamente</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--blue-light);border-radius:8px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--blue);color:white;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+            <span style="font-size:13px;font-weight:600;color:var(--navy);">Treinar pela manhã</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--blue-light);border-radius:8px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--blue);color:white;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div>
+            <span style="font-size:13px;font-weight:600;color:var(--navy);">Seguir a estratégia alimentar proposta</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--blue-light);border-radius:8px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--blue);color:white;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">5</div>
+            <span style="font-size:13px;font-weight:600;color:var(--navy);">Melhorar composição corporal e marcadores hormonais</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--blue-light);border-radius:8px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--blue);color:white;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">6</div>
+            <span style="font-size:13px;font-weight:600;color:var(--navy);">Ler um livro ou artigo por pelo menos 30 minutos por dia</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title" style="color:var(--blue);">Resumo do protocolo</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;">
+          <div style="background:var(--blue-light);border-radius:10px;padding:12px 8px;">
+            <div style="font-size:22px;font-weight:800;color:var(--blue);">60</div>
+            <div style="font-size:9px;color:var(--gray);font-weight:700;text-transform:uppercase;">Dias</div>
+          </div>
+          <div style="background:var(--green-light);border-radius:10px;padding:12px 8px;">
+            <div style="font-size:22px;font-weight:800;color:var(--green-dark);">6</div>
+            <div style="font-size:9px;color:var(--gray);font-weight:700;text-transform:uppercase;">Hábitos</div>
+          </div>
+          <div style="background:#FEF9EE;border-radius:10px;padding:12px 8px;border:1px solid #FDE68A;">
+            <div style="font-size:22px;font-weight:800;color:var(--gold);">5</div>
+            <div style="font-size:9px;color:var(--gray);font-weight:700;text-transform:uppercase;">Suplementos</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;padding:10px 12px;background:#F8FAFC;border-radius:8px;border-left:3px solid var(--blue);font-size:12px;color:var(--gray);line-height:1.6;">
+          Retorno médico ao final dos 60 dias com relatório completo de bioimpedância, aderência aos hábitos e evolução das medidas.
+        </div>
+      </div>
+
+      <!-- Dica iPhone -->
+      <div class="card" style="background:#FFF0F6;border:1px solid #F3BFDA;">
+        <div style="font-size:12px;font-weight:800;color:#A61E4D;margin-bottom:6px;">📱 Dica para iPhone</div>
+        <div style="font-size:11.5px;color:#A61E4D;line-height:1.6;">
+          Para usar o app como um aplicativo nativo e salvar dados permanentemente:<br>
+          <b>Safari → ícone de compartilhar → "Adicionar à Tela de Início"</b>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div class="panel" id="panel-checklist">
+      <div class="card">
+        <div class="day-nav">
+          <button class="nav-btn" id="prevDay">‹</button>
+          <div><span class="day-title" id="dayTitle">Dia 1</span><span class="phase-tag" id="phaseTag">Fase 1</span></div>
+          <button class="nav-btn" id="nextDay">›</button>
+        </div>
+        <div class="day-picker-row" id="dayPickerRow"></div>
+        <div id="checklistItems"></div>
+        <div id="dayCompleteBanner" style="display:none;" class="day-complete-banner">✅ Dia completo! Todos os itens marcados.</div>
+      </div>
+    </div>
+
+    <!-- ÁGUA -->
+    <div class="panel" id="panel-agua">
+      <div class="card">
+        <div class="water-header">
+          <div>
+            <div class="section-title" style="margin-bottom:2px;">Controle de água</div>
+            <div class="water-total" id="waterTotal">0 ml <span>/ 3.000 ml</span></div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px;color:var(--gray);font-weight:700;">Dia <span id="waterDayLabel">1</span></div>
+            <div style="font-size:10px;color:var(--gray);">cada copo = 500 ml</div>
+          </div>
+        </div>
+        <div class="water-bar-bg"><div class="water-bar-fill" id="waterBarFill" style="width:0%"></div></div>
+        <div class="water-grid" id="waterGrid"></div>
+        <div class="water-reset" id="waterReset">Reiniciar copos do dia</div>
+        <div style="margin-top:12px;padding-top:11px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:12px;color:var(--gray);">Navegando o dia:</span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="nav-btn" id="prevDayWater" style="width:44px;height:44px;font-size:18px;">‹</button>
+            <span style="font-size:13px;font-weight:800;color:var(--navy);" id="waterDayNav">Dia 1</span>
+            <button class="nav-btn" id="nextDayWater" style="width:44px;height:44px;font-size:18px;">›</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title">Meta diária</div>
+        <div style="font-size:12px;color:var(--gray);line-height:1.8;">
+          <b style="color:var(--navy);">07h–19h</b> → 1 copo de 500ml a cada ~2h<br>
+          <b style="color:var(--navy);">após 19h</b> → apenas pequenos goles
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPLEMENTOS -->
+    <div class="panel" id="panel-suplementos">
+      <div class="card">
+        <div class="day-nav" style="margin-bottom:9px;">
+          <button class="nav-btn" id="prevDaySupp">‹</button>
+          <div><span class="day-title" id="suppDayTitle">Dia 1</span><span class="phase-tag" id="suppPhaseTag">Fase 1</span></div>
+          <button class="nav-btn" id="nextDaySupp">›</button>
+        </div>
+        <div id="suppContent"></div>
+      </div>
+    </div>
+
+    <!-- BIOIMPEDÂNCIA -->
+    <div class="panel" id="panel-bio">
+      <div class="card" id="bioFormCard">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <div class="section-title" style="margin-bottom:0;">Nova pesagem</div>
+          <div style="font-size:11px;color:var(--gray);" id="bioFormDate"></div>
+        </div>
+        <div class="input-row" style="margin-bottom:8px;">
+          <label>Data da pesagem</label>
+          <input type="date" id="bioDate" style="padding:12px 11px;border-radius:8px;border:1px solid var(--border);font-size:16px;width:100%;font-family:inherit;-webkit-appearance:none;">
+        </div>
+
+        <div class="bio-group-title">Grupo 1 — Peso e Gordura</div>
+        <div class="bio-input-grid">
+          <div class="bio-field"><label>Peso <span class="bio-unit">kg</span></label><input type="number" step="0.01" id="b_peso" placeholder="0.00" inputmode="decimal"></div>
+          <div class="bio-field"><label>IMC</label><input type="number" step="0.1" id="b_imc" placeholder="0.0" inputmode="decimal"></div>
+          <div class="bio-field"><label>Gordura <span class="bio-unit">%</span></label><input type="number" step="0.1" id="b_gordura_pct" placeholder="0.0" inputmode="decimal"></div>
+          <div class="bio-field"><label>Peso gordura <span class="bio-unit">kg</span></label><input type="number" step="0.1" id="b_gordura_kg" placeholder="0.0" inputmode="decimal"></div>
+          <div class="bio-field"><label>Gordura visceral</label><input type="number" step="0.1" id="b_visceral" placeholder="0.0" inputmode="decimal"></div>
+          <div class="bio-field"><label>Obesidade <span class="bio-unit">%</span></label><input type="number" step="0.1" id="b_obesidade_pct" placeholder="0.0" inputmode="decimal"></div>
+        </div>
+
+        <div class="bio-group-title">Grupo 2 — Músculo e Estrutura</div>
+        <div class="bio-input-grid">
+          <div class="bio-field"><label>Massa muscular <span class="bio-unit">kg</span></label><input type="number" step="0.1" id="b_musculo_kg" placeholder="0.0" inputmode="decimal"></div>
+          <div class="bio-field"><label>Músculo esquelético <span class="bio-unit">%</span></label><input type="number" step="0.1" id="b_musculo_esq_pct" placeholder="0.0" inputmode="decimal"></div>
+          <div class="bio-field"><label>LBM (massa magra) <span class="bio-unit">kg</span></label><input type="number" step="0.01" id="b_lbm" placeholder="0.00" inputmode="decimal"></div>
+          <div class="bio-field"><label>Proteína <span class="bio-unit">%</span></label><input type="number" step="0.1" id="b_proteina_pct" placeholder="0.0" inputmode="decimal"></div>
+          <div class="bio-field"><label>Ossos <span class="bio-unit">kg</span></label><input type="number" step="0.1" id="b_ossos" placeholder="0.0" inputmode="decimal"></div>
+          <div class="bio-field"><label>Reg. muscular <span class="bio-unit">%</span></label><input type="number" step="0.1" id="b_reg_muscular" placeholder="0.0" inputmode="decimal"></div>
+        </div>
+
+        <div class="bio-group-title">Grupo 3 — Hidratação e Metabolismo</div>
+        <div class="bio-input-grid">
+          <div class="bio-field"><label>Água <span class="bio-unit">%</span></label><input type="number" step="0.1" id="b_agua_pct" placeholder="0.0" inputmode="decimal"></div>
+          <div class="bio-field"><label>Água <span class="bio-unit">kg</span></label><input type="number" step="0.1" id="b_agua_kg" placeholder="0.0" inputmode="decimal"></div>
+          <div class="bio-field"><label>Metabolismo <span class="bio-unit">kcal</span></label><input type="number" step="1" id="b_metabolismo" placeholder="0" inputmode="decimal"></div>
+          <div class="bio-field"><label>Idade metabólica</label><input type="number" step="1" id="b_idade_meta" placeholder="0" inputmode="numeric"></div>
+        </div>
+
+        <button class="btn btn-primary" id="saveBio" style="margin-top:10px;">Salvar pesagem</button>
+      </div>
+
+      <div class="card" id="bioHistoryCard">
+        <div class="section-title">Histórico de pesagens</div>
+        <div id="bioHistoryList"><div class="empty-state">Nenhuma pesagem registrada ainda.</div></div>
+      </div>
+    </div>
+
+    <!-- EVOLUÇÃO -->
+    <div class="panel" id="panel-grafico">
+      <div class="card">
+        <div class="section-title">Evolução — Bioimpedância</div>
+        <div class="toggle-row" id="bioMetricToggle"></div>
+        <div class="chart-wrap"><canvas id="bioChart"></canvas></div>
+        <div id="bioChartEmpty" class="empty-state" style="display:none;">Registre pelo menos 2 pesagens na aba Bioimpedância para ver os gráficos.</div>
+      </div>
+      <div class="card">
+        <div class="section-title">Aderência semanal ao checklist</div>
+        <div class="chart-wrap" style="height:180px;"><canvas id="adherenceChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="section-title">Aderência por hábito — 60 dias</div>
+        <div class="chart-wrap" style="height:220px;"><canvas id="habitChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="section-title">Checklist semanal — Medidas</div>
+        <div class="toggle-row">
+          <div class="toggle-btn active" data-metric="peso">Peso</div>
+          <div class="toggle-btn" data-metric="cintura">Cintura</div>
+          <div class="toggle-btn" data-metric="energia">Energia</div>
+        </div>
+        <div class="chart-wrap"><canvas id="evolChart"></canvas></div>
+        <div id="chartEmptyState" class="empty-state" style="display:none;">Registre pelo menos 2 semanas na aba Medidas.</div>
+      </div>
+    </div>
+
+    <!-- RELATÓRIO -->
+    <div class="panel" id="panel-relatorio">
+      <div class="card">
+        <div class="section-title">Relatório comparativo — 60 dias</div>
+        <p style="font-size:12px;color:var(--gray);margin:0 0 12px 0;">Comparativo entre a primeira e a última pesagem de bioimpedância registradas.</p>
+        <div id="reportContent"><div class="empty-state">Registre pelo menos 2 pesagens na aba Bioimpedância para gerar o relatório.</div></div>
+        <div id="reportActions" style="display:none;margin-top:10px;">
+          <button class="btn btn-primary" id="exportReport">Exportar relatório (CSV)</button>
+          <button class="btn btn-secondary" id="exportBioHistory">Histórico completo (CSV)</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Aderência por hábito — checklist 60 dias</div>
+        <p style="font-size:12px;color:var(--gray);margin:0 0 10px 0;">Quantos dias cada hábito foi realizado.</p>
+        <div id="habitReportContent"></div>
+        <button class="btn btn-secondary" id="exportHabit" style="margin-top:10px;">Exportar aderência por hábito (CSV)</button>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Exportar dados do checklist</div>
+        <div class="export-row">
+          <button class="btn btn-secondary" id="exportChecklist">Checklist (CSV)</button>
+          <button class="btn btn-secondary" id="exportMedidas">Medidas (CSV)</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Medidas semanais (cintura + energia)</div>
+        <div class="week-select" id="weekSelect"></div>
+        <div class="input-row"><label>Peso (kg)</label><input type="number" step="0.1" id="inputPeso" placeholder="ex: 104.85" inputmode="decimal"></div>
+        <div class="input-row"><label>Cintura (cm)</label><input type="number" step="0.1" id="inputCintura" placeholder="ex: 104" inputmode="decimal"></div>
+        <div class="input-row"><label>Energia (0 a 10)</label><input type="number" step="1" min="0" max="10" id="inputEnergia" placeholder="ex: 7" inputmode="numeric"></div>
+        <button class="btn btn-primary" id="saveMeasure">Salvar medida semanal</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="save-toast" id="saveToast">✓ Salvo</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+(function(){
+const TOTAL_DAYS=60;
+const CHECK_KEYS=[
+  {key:'sono',label:'Dormi até 22h',sub:'Prioridade #1'},
+  {key:'treino',label:'Treinei',sub:'Sessão da manhã'},
+  {key:'agua',label:'3 litros de água',sub:'Meta: completar até 19h'},
+  {key:'dieta',label:'Segui a dieta',sub:'Café, almoço e jantar conforme plano'},
+  {key:'suplementos',label:'Tomei os suplementos',sub:'Hormônios e vitaminas conforme horário'},
+  {key:'leitura',label:'Leitura Diária',sub:'Ler um livro ou artigo por pelo menos 30 minutos'}
+];
+const WATER_CUPS=[
+  {time:'07:00'},{time:'09:00'},{time:'11:00'},{time:'13:30'},{time:'16:00'},
+  {time:'19:00'}
+];
+const SUPPLEMENTS=[
+  {time:'07:00',label:'07h00 — Manhã',items:[
+    {key:'testosterona',name:'Testosterona Base',dose:'Conforme prescrição médica'},
+    {key:'puran',name:'Puran (Tireoide)',dose:'Conforme prescrição médica'},
+    {key:'creatina',name:'Creatina',dose:'Conforme prescrição médica (todos os dias)'}
+  ]},
+  {time:'12:00',label:'12h00 — Almoço',items:[
+    {key:'magnesio',name:'Magnésio Manipulado',dose:'Conforme prescrição médica'},
+    {key:'vitamina_dk2',name:'Vitamina D + K2',dose:'Conforme prescrição médica'}
+  ]}
+];
+
+const BIO_GROUPS=[
+  {label:'Peso e Gordura',color:'#D9534F',metrics:[
+    {key:'peso',label:'Peso',unit:'kg',goodDir:'down'},
+    {key:'imc',label:'IMC',unit:'',goodDir:'down'},
+    {key:'gordura_pct',label:'Gordura',unit:'%',goodDir:'down'},
+    {key:'gordura_kg',label:'Peso gordura',unit:'kg',goodDir:'down'},
+    {key:'visceral',label:'Gordura visceral',unit:'',goodDir:'down'},
+    {key:'obesidade_pct',label:'Obesidade',unit:'%',goodDir:'down'}
+  ]},
+  {label:'Músculo e Estrutura',color:'#0F9B8E',metrics:[
+    {key:'musculo_kg',label:'Massa muscular',unit:'kg',goodDir:'up'},
+    {key:'musculo_esq_pct',label:'Músculo esquelético',unit:'%',goodDir:'up'},
+    {key:'lbm',label:'LBM (massa magra)',unit:'kg',goodDir:'up'},
+    {key:'proteina_pct',label:'Proteína',unit:'%',goodDir:'up'},
+    {key:'ossos',label:'Ossos',unit:'kg',goodDir:'up'},
+    {key:'reg_muscular',label:'Reg. muscular',unit:'%',goodDir:'up'}
+  ]},
+  {label:'Hidratação e Metabolismo',color:'#3B82F6',metrics:[
+    {key:'agua_pct',label:'Água',unit:'%',goodDir:'up'},
+    {key:'agua_kg',label:'Água',unit:'kg',goodDir:'up'},
+    {key:'metabolismo',label:'Metabolismo basal',unit:'kcal',goodDir:'up'},
+    {key:'idade_meta',label:'Idade metabólica',unit:'anos',goodDir:'down'}
+  ]}
+];
+const ALL_BIO_METRICS=BIO_GROUPS.flatMap(g=>g.metrics);
+
+let state={checklist:{},measures:{},water:{},supplements:{},bio:[],currentWeight:null};
+let currentDay=1,currentWeek=1,currentWaterDay=1,currentSuppDay=1;
+let currentMetric='peso',currentBioMetric='peso';
+let evolChartInstance=null,adherenceChartInstance=null,bioChartInstance=null,habitChartInstance=null;
+
+// STORAGE — com fallback para memória se localStorage falhar
+let useStorage=true;
+function testStorage(){
+  try{
+    localStorage.setItem('__test__','1');
+    localStorage.removeItem('__test__');
+    return true;
+  }catch(e){return false;}
+}
+useStorage=testStorage();
+if(!useStorage){
+  document.getElementById('storageWarning').style.display='block';
+}
+
+function calcHabitStats(){
+  return CHECK_KEYS.map(c=>{
+    let count=0;
+    for(let d=1;d<=TOTAL_DAYS;d++){if((state.checklist[d]||{})[c.key])count++;}
+    const pct=Math.round((count/TOTAL_DAYS)*100);
+    return{key:c.key,label:c.label,count,pct};
+  });
+}
+function countPerfectDays(){
+  let count=0;
+  for(let d=1;d<=TOTAL_DAYS;d++){if(dayCompletionCount(d)===CHECK_KEYS.length)count++;}
+  return count;
+}
+
+function phaseForDay(d){return d<=20?'Fase 1':d<=40?'Fase 2':'Fase 3';}
+function weekForDay(d){return Math.min(8,Math.ceil(d/7));}
+function daysInWeek(w){return[(w-1)*7+1,w===8?60:w*7];}
+function fmtDate(iso){if(!iso)return'';const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;}
+function today(){return new Date().toISOString().slice(0,10);}
+
+function loadState(){
+  if(!useStorage)return;
+  try{
+    const raw=localStorage.getItem('plano60-arianna-v1');
+    if(raw){const p=JSON.parse(raw);state.checklist=p.checklist||{};state.measures=p.measures||{};state.water=p.water||{};state.supplements=p.supplements||{};state.bio=p.bio||[];state.currentWeight=p.currentWeight??null;}
+  }catch(e){useStorage=false;document.getElementById('storageWarning').style.display='block';}
+}
+let saveTO=null;
+function saveState(toast){
+  if(useStorage){
+    try{localStorage.setItem('plano60-arianna-v1',JSON.stringify(state));}
+    catch(e){useStorage=false;document.getElementById('storageWarning').style.display='block';}
+  }
+  if(toast){const t=document.getElementById('saveToast');t.classList.add('show');clearTimeout(saveTO);saveTO=setTimeout(()=>t.classList.remove('show'),1400);}
+}
+
+function getDayData(d){if(!state.checklist[d])state.checklist[d]={};return state.checklist[d];}
+function getWaterData(d){if(!state.water[d])state.water[d]=[];return state.water[d];}
+function getSuppData(d){if(!state.supplements[d])state.supplements[d]={};return state.supplements[d];}
+function dayCompletionCount(d){const data=state.checklist[d]||{};return CHECK_KEYS.filter(c=>data[c.key]).length;}
+
+function renderProgressRow(){
+  let totalChecks=0,daysWithAny=0;
+  for(let d=1;d<=TOTAL_DAYS;d++){const c=dayCompletionCount(d);totalChecks+=c;if(c>0)daysWithAny++;}
+  const pct=Math.round((totalChecks/(TOTAL_DAYS*CHECK_KEYS.length))*100);
+  const waterMl=(state.water[currentDay]||[]).length*500;
+  const bioCount=state.bio.length;
+  document.getElementById('progressRow').innerHTML=`
+    <div class="stat-box"><span class="sval">${pct}%</span><span class="slabel">Aderência</span></div>
+    <div class="stat-box"><span class="sval">${daysWithAny}</span><span class="slabel">Dias reg.</span></div>
+    <div class="stat-box"><span class="sval">${waterMl}ml</span><span class="slabel">Água hoje</span></div>
+    <div class="stat-box"><span class="sval">${bioCount}</span><span class="slabel">Pesagens</span></div>
+  `;
+}
+
+function renderDayPicker(){
+  const row=document.getElementById('dayPickerRow');
+  let html='';
+  for(let d=1;d<=TOTAL_DAYS;d++){
+    const done=dayCompletionCount(d)===CHECK_KEYS.length;
+    html+=`<div class="day-pill ${done?'done':''} ${d===currentDay?'current':''}" data-day="${d}">${d}</div>`;
+  }
+  row.innerHTML=html;
+  row.querySelectorAll('.day-pill').forEach(el=>el.addEventListener('click',()=>{currentDay=parseInt(el.dataset.day);renderChecklistPanel();}));
+  const cur=row.querySelector('.day-pill.current');
+  if(cur)cur.scrollIntoView({inline:'center',block:'nearest'});
+}
+function renderChecklistPanel(){
+  document.getElementById('dayTitle').textContent=`Dia ${currentDay}`;
+  document.getElementById('phaseTag').textContent=phaseForDay(currentDay);
+  document.getElementById('prevDay').disabled=currentDay<=1;
+  document.getElementById('nextDay').disabled=currentDay>=TOTAL_DAYS;
+  const dayData=getDayData(currentDay);
+  const itemsEl=document.getElementById('checklistItems');
+  itemsEl.innerHTML=CHECK_KEYS.map(c=>{
+    const checked=!!dayData[c.key];
+    return`<div class="check-item" data-key="${c.key}">
+      <div class="check-box ${checked?'checked':''}">${checked?'✓':''}</div>
+      <div><div class="check-label">${c.label}</div><div class="check-sub">${c.sub}</div></div>
+    </div>`;
+  }).join('');
+  itemsEl.querySelectorAll('.check-item').forEach(el=>el.addEventListener('click',()=>{
+    const key=el.dataset.key;const d=getDayData(currentDay);d[key]=!d[key];
+    saveState(true);renderChecklistPanel();renderProgressRow();
+  }));
+  const allDone=CHECK_KEYS.every(c=>dayData[c.key]);
+  document.getElementById('dayCompleteBanner').style.display=allDone?'block':'none';
+  renderDayPicker();
+}
+
+function renderWaterPanel(){
+  document.getElementById('waterDayLabel').textContent=currentWaterDay;
+  document.getElementById('waterDayNav').textContent=`Dia ${currentWaterDay}`;
+  document.getElementById('prevDayWater').disabled=currentWaterDay<=1;
+  document.getElementById('nextDayWater').disabled=currentWaterDay>=TOTAL_DAYS;
+  const filled=getWaterData(currentWaterDay);
+  const ml=filled.length*500;
+  const pct=Math.min(100,Math.round((ml/3000)*100));
+  document.getElementById('waterTotal').innerHTML=`${ml.toLocaleString('pt-BR')} ml <span>/ 3.000 ml</span>`;
+  document.getElementById('waterBarFill').style.width=pct+'%';
+  const grid=document.getElementById('waterGrid');
+  grid.innerHTML=WATER_CUPS.map((cup,i)=>{
+    const ok=filled.includes(i);
+    return`<div class="water-cup ${ok?'filled':''}" data-idx="${i}">
+      <span class="cup-icon">${ok?'💧':'🫙'}</span>
+      <div class="cup-time">${cup.time}</div>
+      <div class="cup-ml">${ok?'500ml ✓':'500ml'}</div>
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('.water-cup').forEach(el=>el.addEventListener('click',()=>{
+    const idx=parseInt(el.dataset.idx);const arr=getWaterData(currentWaterDay);
+    const pos=arr.indexOf(idx);if(pos===-1)arr.push(idx);else arr.splice(pos,1);
+    state.water[currentWaterDay]=arr;saveState(true);renderWaterPanel();renderProgressRow();
+  }));
+}
+
+function renderSuppPanel(){
+  document.getElementById('suppDayTitle').textContent=`Dia ${currentSuppDay}`;
+  document.getElementById('suppPhaseTag').textContent=phaseForDay(currentSuppDay);
+  document.getElementById('prevDaySupp').disabled=currentSuppDay<=1;
+  document.getElementById('nextDaySupp').disabled=currentSuppDay>=TOTAL_DAYS;
+  const suppData=getSuppData(currentSuppDay);
+  const allKeys=SUPPLEMENTS.flatMap(g=>g.items.map(i=>i.key));
+  const doneCount=allKeys.filter(k=>suppData[k]).length;
+  const el=document.getElementById('suppContent');
+  el.innerHTML=SUPPLEMENTS.map(group=>`
+    <div class="supp-block">
+      <div class="supp-time-header">⏰ ${group.label}</div>
+      ${group.items.map(item=>{
+        const done=!!suppData[item.key];
+        return`<div class="supp-item ${done?'done':''}" data-key="${item.key}">
+          <div class="supp-check ${done?'checked':''}">${done?'✓':''}</div>
+          <div><div class="supp-name">${item.name}</div><div class="supp-dose">${item.dose}</div></div>
+        </div>`;
+      }).join('')}
+    </div>
+  `).join('');
+  if(doneCount===allKeys.length){
+    el.insertAdjacentHTML('beforeend','<div class="supp-all-done">✅ Todos os suplementos do dia tomados!</div>');
+  }
+  el.querySelectorAll('.supp-item').forEach(item=>item.addEventListener('click',()=>{
+    const key=item.dataset.key;const d=getSuppData(currentSuppDay);
+    d[key]=!d[key];state.supplements[currentSuppDay]=d;saveState(true);renderSuppPanel();
+  }));
+}
+
+const BIO_FIELDS=['peso','imc','gordura_pct','gordura_kg','visceral','obesidade_pct','musculo_kg','musculo_esq_pct','lbm','proteina_pct','ossos','reg_muscular','agua_pct','agua_kg','metabolismo','idade_meta'];
+
+function readBioForm(){
+  const obj={date:document.getElementById('bioDate').value||today()};
+  BIO_FIELDS.forEach(k=>{
+    const v=document.getElementById('b_'+k).value;
+    obj[k]=v!==''?parseFloat(v):null;
+  });
+  return obj;
+}
+function clearBioForm(){
+  document.getElementById('bioDate').value=today();
+  BIO_FIELDS.forEach(k=>document.getElementById('b_'+k).value='');
+}
+function saveBio(){
+  const entry=readBioForm();
+  if(entry.peso===null){alert('Informe pelo menos o peso para salvar.');return;}
+  const idx=state.bio.findIndex(b=>b.date===entry.date);
+  if(idx>=0)state.bio[idx]=entry;else state.bio.push(entry);
+  state.bio.sort((a,b)=>a.date.localeCompare(b.date));
+  saveState(true);clearBioForm();renderBioHistory();renderProgressRow();
+}
+function renderBioHistory(){
+  const list=document.getElementById('bioHistoryList');
+  if(!state.bio.length){list.innerHTML='<div class="empty-state">Nenhuma pesagem registrada ainda.</div>';return;}
+  const sorted=[...state.bio].reverse();
+  list.innerHTML=sorted.map((b,i)=>{
+    const isBaseline=state.bio[0].date===b.date;
+    const prev=i<sorted.length-1?sorted[i+1]:null;
+    const delta=prev&&b.peso!=null&&prev.peso!=null?(b.peso-prev.peso).toFixed(2):null;
+    const deltaClass=delta?parseFloat(delta)<0?'down':'up':'';
+    const deltaStr=delta?(parseFloat(delta)>0?'+':'')+delta+' kg':'';
+    return`<div class="bio-history-item" data-date="${b.date}">
+      <div>
+        <div class="bio-history-date">${fmtDate(b.date)}${isBaseline?'<span class="baseline-badge">BASELINE</span>':''}</div>
+        <div class="bio-history-sub">Gordura: ${b.gordura_pct??'—'}% · Muscular: ${b.musculo_kg??'—'}kg · Visceral: ${b.visceral??'—'}</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="bio-history-peso">${b.peso??'—'} kg</div>
+        ${deltaStr?`<div class="bio-history-delta ${deltaClass}">${deltaStr}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  list.querySelectorAll('.bio-history-item').forEach(el=>el.addEventListener('click',()=>{
+    const entry=state.bio.find(b=>b.date===el.dataset.date);
+    if(!entry)return;
+    document.getElementById('bioDate').value=entry.date;
+    BIO_FIELDS.forEach(k=>{document.getElementById('b_'+k).value=entry[k]??'';});
+    document.getElementById('bioFormCard').scrollIntoView({behavior:'smooth'});
+  }));
+}
+
+function renderWeekSelect(){
+  const el=document.getElementById('weekSelect');el.innerHTML='';
+  for(let w=1;w<=8;w++){
+    const filled=!!state.measures[w];
+    const div=document.createElement('div');
+    div.className=`week-pill ${w===currentWeek?'active':''} ${filled?'filled':''}`;
+    div.textContent='Sem '+w;div.dataset.week=w;
+    div.addEventListener('click',()=>{currentWeek=parseInt(div.dataset.week);renderMeasuresPanel();});
+    el.appendChild(div);
+  }
+}
+function renderMeasuresPanel(){
+  renderWeekSelect();
+  const m=state.measures[currentWeek]||{};
+  document.getElementById('inputPeso').value=m.peso??'';
+  document.getElementById('inputCintura').value=m.cintura??'';
+  document.getElementById('inputEnergia').value=m.energia??'';
+}
+
+function buildBioMetricToggle(){
+  const wrap=document.getElementById('bioMetricToggle');
+  const options=[
+    {key:'peso',label:'Peso'},
+    {key:'gordura_pct',label:'Gordura %'},
+    {key:'visceral',label:'Visceral'},
+    {key:'musculo_kg',label:'Músculo'},
+    {key:'lbm',label:'LBM'},
+    {key:'proteina_pct',label:'Proteína %'},
+    {key:'agua_pct',label:'Água %'},
+    {key:'idade_meta',label:'Id.Metab.'}
+  ];
+  wrap.innerHTML=options.map(o=>`<div class="toggle-btn ${o.key===currentBioMetric?'active':''}" data-bmetric="${o.key}">${o.label}</div>`).join('');
+  wrap.querySelectorAll('.toggle-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    wrap.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');currentBioMetric=btn.dataset.bmetric;buildBioChart();
+  }));
+}
+function buildBioChart(){
+  const empty=document.getElementById('bioChartEmpty');
+  const canvas=document.getElementById('bioChart');
+  if(state.bio.length<2){empty.style.display='block';canvas.parentElement.style.display='none';return;}
+  empty.style.display='none';canvas.parentElement.style.display='block';
+  const labels=state.bio.map(b=>fmtDate(b.date));
+  const values=state.bio.map(b=>b[currentBioMetric]??null);
+  const meta=ALL_BIO_METRICS.find(m=>m.key===currentBioMetric)||{};
+  const grp=BIO_GROUPS.find(g=>g.metrics.some(m=>m.key===currentBioMetric));
+  const color=grp?grp.color:'#0F9B8E';
+  if(bioChartInstance)bioChartInstance.destroy();
+  bioChartInstance=new Chart(canvas,{
+    type:'line',
+    data:{labels,datasets:[{label:meta.label||currentBioMetric,data:values,borderColor:color,backgroundColor:color+'18',borderWidth:2.5,pointBackgroundColor:color,pointRadius:4,tension:.25,fill:true,spanGaps:true}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:11}}},x:{ticks:{font:{size:10},maxRotation:45}}}}
+  });
+}
+function buildEvolChart(){
+  const emptyEl=document.getElementById('chartEmptyState');
+  const canvas=document.getElementById('evolChart');
+  const weeks=[],values=[];
+  for(let w=1;w<=8;w++){
+    const m=state.measures[w];
+    if(m&&m[currentMetric]!=null&&m[currentMetric]!==''){weeks.push('Sem '+w);values.push(parseFloat(m[currentMetric]));}
+  }
+  if(values.length<2){emptyEl.style.display='block';canvas.parentElement.style.display='none';return;}
+  emptyEl.style.display='none';canvas.parentElement.style.display='block';
+  const labelMap={peso:'Peso (kg)',cintura:'Cintura (cm)',energia:'Energia (0-10)'};
+  if(evolChartInstance)evolChartInstance.destroy();
+  evolChartInstance=new Chart(canvas,{
+    type:'line',
+    data:{labels:weeks,datasets:[{label:labelMap[currentMetric],data:values,borderColor:'#0F9B8E',backgroundColor:'rgba(15,155,142,0.08)',borderWidth:2.5,pointBackgroundColor:'#0F9B8E',pointRadius:4,tension:.25,fill:true}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:11}}},x:{ticks:{font:{size:11}}}}}
+  });
+}
+function buildAdherenceChart(){
+  const labels=[],values=[];
+  for(let w=1;w<=8;w++){
+    const[start,end]=daysInWeek(w);let total=0,possible=0;
+    for(let d=start;d<=end;d++){total+=dayCompletionCount(d);possible+=CHECK_KEYS.length;}
+    labels.push('Sem '+w);values.push(possible?Math.round((total/possible)*100):0);
+  }
+  if(adherenceChartInstance)adherenceChartInstance.destroy();
+  adherenceChartInstance=new Chart(document.getElementById('adherenceChart'),{
+    type:'bar',
+    data:{labels,datasets:[{label:'Aderência (%)',data:values,backgroundColor:values.map(v=>v>=70?'#0F9B8E':v>=40?'#D9A441':'#D9534F'),borderRadius:4,maxBarThickness:34}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,ticks:{font:{size:10},callback:v=>v+'%'}},x:{ticks:{font:{size:10},autoSkip:false}}}}
+  });
+}
+function buildHabitChart(){
+  const stats=calcHabitStats();
+  const perfect=countPerfectDays();
+  const labels=[...stats.map(s=>s.label.replace('Segui a ','').replace('Tomei os ','Suplementos').replace('3 litros de água','3L água').replace('Dormi até 22h','Sono 22h').replace('Treinei','Treino').replace('Leitura Diária','Leitura')),'Dias 100%'];
+  const values=[...stats.map(s=>s.pct),Math.round((perfect/TOTAL_DAYS)*100)];
+  const colors=[...stats.map(s=>s.pct>=80?'#0F9B8E':s.pct>=60?'#D9A441':'#D9534F'),Math.round((perfect/TOTAL_DAYS)*100)>=70?'#14213D':'#6B7280'];
+  if(habitChartInstance)habitChartInstance.destroy();
+  habitChartInstance=new Chart(document.getElementById('habitChart'),{
+    type:'bar',
+    data:{labels,datasets:[{label:'Aderência (%)',data:values,backgroundColor:colors,borderRadius:5,maxBarThickness:48}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{
+        const idx=ctx.dataIndex;
+        if(idx<stats.length)return`${stats[idx].count} dias (${values[idx]}%)`;
+        return`${countPerfectDays()} dias (${values[idx]}%)`;
+      }}}},
+      scales:{y:{min:0,max:100,ticks:{font:{size:10},callback:v=>v+'%'}},x:{ticks:{font:{size:9.5},maxRotation:20}}}
+    }
+  });
+}
+
+function renderHabitReport(){
+  const stats=calcHabitStats();
+  const perfect=countPerfectDays();
+  const daysRecorded=Array.from({length:TOTAL_DAYS},(_,i)=>dayCompletionCount(i+1)>0?1:0).reduce((a,b)=>a+b,0);
+  const el=document.getElementById('habitReportContent');
+
+  let html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+    <div style="background:var(--teal-light);border-radius:9px;padding:10px 12px;text-align:center;">
+      <div style="font-size:22px;font-weight:800;color:var(--teal-dark);">${daysRecorded}</div>
+      <div style="font-size:9.5px;color:var(--gray);font-weight:700;text-transform:uppercase;">Dias com registro</div>
+    </div>
+    <div style="background:#EFF6FF;border-radius:9px;padding:10px 12px;text-align:center;border:1px solid #BFDBFE;">
+      <div style="font-size:22px;font-weight:800;color:#1D4ED8;">${perfect}</div>
+      <div style="font-size:9.5px;color:var(--gray);font-weight:700;text-transform:uppercase;">Dias 100% completos</div>
+    </div>
+  </div>`;
+
+  html+=`<table class="report-table"><thead><tr>
+    <th>Hábito</th><th style="text-align:center;">Dias</th><th style="text-align:center;">%</th><th style="text-align:center;">Status</th>
+  </tr></thead><tbody>`;
+  stats.forEach(s=>{
+    const color=s.pct>=80?'#0F9B8E':s.pct>=60?'#D9A441':'#D9534F';
+    const status=s.pct>=80?'Excelente':s.pct>=60?'Bom':'Atenção';
+    html+=`<tr>
+      <td style="font-weight:600;">${s.label}</td>
+      <td style="text-align:center;font-weight:800;">${s.count}/${TOTAL_DAYS}</td>
+      <td style="text-align:center;font-weight:800;color:${color};">${s.pct}%</td>
+      <td style="text-align:center;">
+        <span style="background:${color}20;color:${color};font-size:10px;font-weight:800;padding:3px 9px;border-radius:10px;">${status}</span>
+      </td>
+    </tr>`;
+  });
+  const pPct=Math.round((perfect/TOTAL_DAYS)*100);
+  const pColor=pPct>=60?'#14213D':'#6B7280';
+  html+=`<tr style="border-top:2px solid var(--border);">
+    <td style="font-weight:800;color:var(--navy);">Dias 100% completos</td>
+    <td style="text-align:center;font-weight:800;color:var(--navy);">${perfect}/${TOTAL_DAYS}</td>
+    <td style="text-align:center;font-weight:800;color:${pColor};">${pPct}%</td>
+    <td style="text-align:center;">
+      <span style="background:${pColor}20;color:${pColor};font-size:10px;font-weight:800;padding:3px 9px;border-radius:10px;">${pPct>=60?'Consistente':'Em progresso'}</span>
+    </td>
+  </tr>`;
+  html+=`</tbody></table>`;
+
+  html+=`<div style="margin-top:14px;">`;
+  stats.forEach(s=>{
+    const color=s.pct>=80?'#0F9B8E':s.pct>=60?'#D9A441':'#D9534F';
+    html+=`<div style="margin-bottom:9px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+        <span style="font-weight:700;color:var(--navy);">${s.label}</span>
+        <span style="font-weight:800;color:${color};">${s.count} dias · ${s.pct}%</span>
+      </div>
+      <div style="height:8px;background:#E2E5EA;border-radius:10px;overflow:hidden;">
+        <div style="height:100%;width:${s.pct}%;background:${color};border-radius:10px;transition:width .4s;"></div>
+      </div>
+    </div>`;
+  });
+  html+=`</div>`;
+  el.innerHTML=html;
+}
+
+function exportHabitCSV(){
+  const stats=calcHabitStats();
+  const perfect=countPerfectDays();
+  const rows=[['Hábito','Dias realizados','Total de dias','% aderência','Status']];
+  stats.forEach(s=>{
+    const status=s.pct>=80?'Excelente':s.pct>=60?'Bom':'Atenção';
+    rows.push([s.label,s.count,TOTAL_DAYS,s.pct+'%',status]);
+  });
+  rows.push(['Dias 100% completos',perfect,TOTAL_DAYS,Math.round((perfect/TOTAL_DAYS)*100)+'%',perfect>=36?'Consistente':'Em progresso']);
+  downloadCSV('aderencia_habitos_60dias.csv',rows);
+}
+
+function renderReport(){
+  const el=document.getElementById('reportContent');
+  const actions=document.getElementById('reportActions');
+  if(state.bio.length<2){el.innerHTML='<div class="empty-state">Registre pelo menos 2 pesagens na aba Bioimpedância para gerar o relatório.</div>';actions.style.display='none';return;}
+  const base=state.bio[0];
+  const last=state.bio[state.bio.length-1];
+  const daysDiff=Math.round((new Date(last.date)-new Date(base.date))/(86400000));
+  let html=`<div style="background:var(--teal-light);border-radius:9px;padding:11px 14px;margin-bottom:12px;font-size:12px;">
+    <b style="color:var(--navy);">Baseline:</b> ${fmtDate(base.date)} &nbsp;→&nbsp; <b style="color:var(--navy);">Última:</b> ${fmtDate(last.date)} &nbsp;·&nbsp; <b style="color:var(--teal-dark);">${daysDiff} dias de protocolo</b>
+  </div>`;
+  html+=`<table class="report-table"><thead><tr><th>Métrica</th><th>Baseline</th><th>Atual</th><th>Variação</th></tr></thead><tbody>`;
+  BIO_GROUPS.forEach(grp=>{
+    html+=`<tr class="group-sep"><td colspan="4">${grp.label}</td></tr>`;
+    grp.metrics.forEach(m=>{
+      const bv=base[m.key];const lv=last[m.key];
+      let deltaStr='—',deltaClass='delta-neutral';
+      if(bv!=null&&lv!=null){
+        const d=lv-bv;const dStr=(d>0?'+':'')+d.toFixed(2);
+        const isGood=(m.goodDir==='down'&&d<0)||(m.goodDir==='up'&&d>0);
+        const isBad=(m.goodDir==='down'&&d>0)||(m.goodDir==='up'&&d<0);
+        deltaStr=dStr+(m.unit?' '+m.unit:'');
+        deltaClass=isGood?'delta-good':isBad?'delta-bad':'delta-neutral';
+      }
+      html+=`<tr>
+        <td>${m.label}${m.unit?' ('+m.unit+')':''}</td>
+        <td>${bv!=null?bv+' '+m.unit:'—'}</td>
+        <td>${lv!=null?lv+' '+m.unit:'—'}</td>
+        <td class="${deltaClass}">${deltaStr}</td>
+      </tr>`;
+    });
+  });
+  html+=`</tbody></table>`;
+  el.innerHTML=html;actions.style.display='block';
+}
+
+function csvEscape(val){const s=String(val??'');return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}
+function downloadCSV(filename,rows){
+  const csv=rows.map(r=>r.map(csvEscape).join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function exportChecklistCSV(){
+  const rows=[['Dia','Semana','Fase','Dormi até 22h','Treinei','3L água','Dieta','Suplementos','Leitura Diária','Água ml','Itens completos']];
+  for(let d=1;d<=TOTAL_DAYS;d++){
+    const data=state.checklist[d]||{};
+    const waterMl=(state.water[d]||[]).length*500;
+    rows.push([d,weekForDay(d),phaseForDay(d),data.sono?'Sim':'Não',data.treino?'Sim':'Não',data.agua?'Sim':'Não',data.dieta?'Sim':'Não',data.suplementos?'Sim':'Não',data.leitura?'Sim':'Não',waterMl,dayCompletionCount(d)+'/'+CHECK_KEYS.length]);
+  }
+  downloadCSV('checklist_plano_premium_arianna.csv',rows);
+}
+function exportMedidasCSV(){
+  const rows=[['Semana','Peso (kg)','Cintura (cm)','Energia (0-10)']];
+  for(let w=1;w<=8;w++){const m=state.measures[w]||{};rows.push([w,m.peso??'',m.cintura??'',m.energia??'']);}
+  downloadCSV('medidas_plano_premium.csv',rows);
+}
+function exportReportCSV(){
+  if(state.bio.length<2)return;
+  const base=state.bio[0],last=state.bio[state.bio.length-1];
+  const rows=[['Métrica','Unidade','Baseline ('+fmtDate(base.date)+')','Atual ('+fmtDate(last.date)+')','Variação','Direção']];
+  BIO_GROUPS.forEach(grp=>{
+    rows.push([grp.label,'','','','','']);
+    grp.metrics.forEach(m=>{
+      const bv=base[m.key],lv=last[m.key];
+      let delta='',dir='';
+      if(bv!=null&&lv!=null){const d=lv-bv;delta=(d>0?'+':'')+d.toFixed(2);dir=(m.goodDir==='down'&&d<0)||(m.goodDir==='up'&&d>0)?'Melhora':'Piora';}
+      rows.push([m.label,m.unit,bv??'',lv??'',delta,dir]);
+    });
+  });
+  downloadCSV('relatorio_bioimpedancia_60dias.csv',rows);
+}
+function exportBioHistoryCSV(){
+  if(!state.bio.length)return;
+  const headers=['Data',...ALL_BIO_METRICS.map(m=>m.label+(m.unit?' ('+m.unit+')':''))];
+  const rows=[headers];
+  state.bio.forEach(b=>{
+    rows.push([fmtDate(b.date),...ALL_BIO_METRICS.map(m=>b[m.key]??'')]);
+  });
+  downloadCSV('historico_bioimpedancia.csv',rows);
+}
+
+function switchTab(tabName){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tabName));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+tabName).classList.add('active');
+  if(tabName==='grafico'){buildBioMetricToggle();buildBioChart();buildAdherenceChart();buildEvolChart();buildHabitChart();}
+  if(tabName==='agua')renderWaterPanel();
+  if(tabName==='suplementos')renderSuppPanel();
+  if(tabName==='relatorio'){renderReport();renderHabitReport();renderMeasuresPanel();}
+  if(tabName==='bio')renderBioHistory();
+  if(tabName==='checklist')renderChecklistPanel();
+  // scroll to top on tab change
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function init(){
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
+
+  const weightInput=document.getElementById('currentWeightInput');
+  const weightSaved=document.getElementById('currentWeightSaved');
+  if(state.currentWeight!=null){
+    weightInput.value=state.currentWeight;
+    weightSaved.textContent='Último valor salvo: '+state.currentWeight+' kg';
+  }
+  let weightTO=null;
+  weightInput.addEventListener('input',()=>{
+    clearTimeout(weightTO);
+    weightTO=setTimeout(()=>{
+      const v=weightInput.value;
+      state.currentWeight=v!==''?parseFloat(v):null;
+      saveState(true);
+      weightSaved.textContent=state.currentWeight!=null?'Último valor salvo: '+state.currentWeight+' kg':'';
+    },500);
+  });
+
+  document.getElementById('prevDay').addEventListener('click',()=>{if(currentDay>1){currentDay--;renderChecklistPanel();}});
+  document.getElementById('nextDay').addEventListener('click',()=>{if(currentDay<TOTAL_DAYS){currentDay++;renderChecklistPanel();}});
+
+  document.getElementById('prevDayWater').addEventListener('click',()=>{if(currentWaterDay>1){currentWaterDay--;renderWaterPanel();renderProgressRow();}});
+  document.getElementById('nextDayWater').addEventListener('click',()=>{if(currentWaterDay<TOTAL_DAYS){currentWaterDay++;renderWaterPanel();renderProgressRow();}});
+  document.getElementById('waterReset').addEventListener('click',()=>{state.water[currentWaterDay]=[];saveState(true);renderWaterPanel();renderProgressRow();});
+
+  document.getElementById('prevDaySupp').addEventListener('click',()=>{if(currentSuppDay>1){currentSuppDay--;renderSuppPanel();}});
+  document.getElementById('nextDaySupp').addEventListener('click',()=>{if(currentSuppDay<TOTAL_DAYS){currentSuppDay++;renderSuppPanel();}});
+
+  document.getElementById('saveBio').addEventListener('click',saveBio);
+  document.getElementById('bioDate').value=today();
+
+  document.getElementById('saveMeasure').addEventListener('click',()=>{
+    const peso=document.getElementById('inputPeso').value;
+    const cintura=document.getElementById('inputCintura').value;
+    const energia=document.getElementById('inputEnergia').value;
+    state.measures[currentWeek]={
+      peso:peso!==''?parseFloat(peso):undefined,
+      cintura:cintura!==''?parseFloat(cintura):undefined,
+      energia:energia!==''?parseInt(energia):undefined
+    };
+    saveState(true);renderWeekSelect();renderProgressRow();
+  });
+
+  document.querySelectorAll('.toggle-btn[data-metric]').forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll('.toggle-btn[data-metric]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');currentMetric=btn.dataset.metric;buildEvolChart();
+  }));
+
+  document.getElementById('exportChecklist').addEventListener('click',exportChecklistCSV);
+  document.getElementById('exportMedidas').addEventListener('click',exportMedidasCSV);
+  document.getElementById('exportReport').addEventListener('click',exportReportCSV);
+  document.getElementById('exportBioHistory').addEventListener('click',exportBioHistoryCSV);
+  document.getElementById('exportHabit').addEventListener('click',exportHabitCSV);
+
+  renderProgressRow();
+  renderBioHistory();
+}
+
+loadState();
+document.getElementById('loadingState').style.display='none';
+document.getElementById('mainContent').style.display='block';
+init();
+
+})();
+</script>
+</body>
+</html>
